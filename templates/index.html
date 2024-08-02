@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 200px;
+            padding: 100px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .title {
+            text-align: center;
+        }
+        .news-item {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        .news-item h2 {
+            margin: 0 0 10px;
+        }
+        .news-item p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">News App</h1>
+        <form id="newsForm">
+            <input type="text" id="query" name="query" placeholder="Enter news topic" required>
+            <button type="submit">Search</button>
+        </form>
+        <div id="newsContainer"></div>
+    </div>
+    <script>
+        document.getElementById('newsForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const query = document.getElementById('query').value;
+            fetch('/get_news', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `query=${query}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                const newsContainer = document.getElementById('newsContainer');
+                newsContainer.innerHTML = '';
+                if (data.length > 0) {
+                    data.forEach(article => {
+                        const newsItem = document.createElement('div');
+                        newsItem.className = 'news-item';
+                        newsItem.innerHTML = `<h2>${article.title}</h2><p>${article.description}</p>`;
+                        newsContainer.appendChild(newsItem);
+                    });
+                } else {
+                    newsContainer.innerHTML = '<p>No articles found for your query. Please try again.</p>';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
