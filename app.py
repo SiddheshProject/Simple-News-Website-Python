@@ -11,7 +11,7 @@ def index():
 @app.route('/get_news', methods=['POST'])
 def get_news():
     query = request.form['query']
-    url = f"https://newsapi.org/v2/everything?q={query}&from=2024-06-25&sortBy=publishedAt&apiKey=9f2dd144b9e24c04be9019de2c38dbd0"
+    url = f"https://newsapi.org/v2/everything?q={query}&from=2024-06-25&sortBy=publishedAt&apiKey=[YOUR_API]"
 
     r = requests.get(url)
     news = json.loads(r.text)
@@ -23,3 +23,5 @@ def get_news():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+# Create your account in NewsAPI and use your own API
